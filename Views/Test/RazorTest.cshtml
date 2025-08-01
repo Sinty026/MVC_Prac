@@ -1,0 +1,41 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "RazorTest";
+    var num1 = 1;
+    var num2 = 2;
+
+    var items = new string[] { "bread", "milk", "eggs", "cheese"};
+
+    var coordinate = new { x = 1, y = 3 };
+
+}
+<h1>Razor MVC Prac</h1>
+
+<p>number: @num1</p>
+<p>number: @num2</p>
+<p>@num1 + @num2 = @(num1 + num2)</p>
+
+
+@foreach (var i in items)
+{
+    <li>@i</li>
+}
+
+<p>x: @coordinate.x</p>
+<p>y: @coordinate.y</p>
+
+<a href="/Test/RazorTest/30?text=items">Q2, 4</a>
+<form method="post" asp-controller="Test" asp-action="RazorTest" asp-route-id="20" asp-route-text="items">
+    <label for="text">Page name</label>
+    <input type="text" name="text"/>
+
+    <label for="text">Id: </label>
+    <input type="text" name="id" />
+    <button type="submit">Save</button>
+</form>
+
+<p>ViewBag.id2: @ViewBag.id</p>
+<p>Text: @ViewBag.text</p>
+<p>Form Vlaue: @ViewBag.formValue</p>

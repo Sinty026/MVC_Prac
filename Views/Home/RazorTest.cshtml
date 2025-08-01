@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var Username = "Tanvir";
+    var num1 = 1;
+    var num2 = 2;
+
+    var isActive = false;
+
+    var list = new int[] { 1, 2, 3, 5, 5, 6 };
+}
+
+@Username
+<p>number: @num1</p>
+<p>number: @num2</p>
+<p>@num1 + @num2 = @(num1 + num2)</p>
+
+@if (isActive)
+{
+    <p>The item is in stock</p>
+}
+else
+{
+    <p>item is not in stock</p>
+}
+
+@for (var i = 0; i<5; i++)
+{
+    <p>loop No. @(i + 1)</p>
+}
+
+@foreach (var i in list)
+{
+    <p>loop no. @i</p>
+}
