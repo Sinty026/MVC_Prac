@@ -4,56 +4,44 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Shop Items</h1>
+
+<form method="post" class="mb-3" asp-controller="Items" asp-action="Index" Class="mb-3"> 
+    <input type="text" class="form-control" maxlength="100" name="searchText" value="@ViewBag.searchText" placeholder="Search Item"/> 
+    <div style="padding-top:10px">
+        <button type="submit" class="btn btn-outline-primary me-2">Search</button>
+        <a type="reset" class="btn btn-outline-danger" asp-controller="Items" asp-action="Index">Rest</a>
+
+    </div>
+</form>
+
+@if (Model == null || !Model.Any())
+{
+    <p class="text-danger">No items found matching your search.</p>
+}
+
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ItemName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ItemDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ItemCost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ItemImage)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemCost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemImage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ItemId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ItemId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ItemId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 col-sm-6 mb-4"> 
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">@item.ItemName</h5>
+                    <p class="m-1">Category: @item.Category.CategoryName</p>
+                    <p class="card-text">Description: @item.ItemDescription</p>
+                    <p>Cost:$@item.ItemCost</p>
+                </div>
+                <img src="@item.ItemImage" alt="@item.ItemName" style="height:200px; width:200px;">
+                <div style="padding:10px">
+                    <a asp-action="Details" asp-route-id="@item.ItemId" class="btn btn-outline-primary" >View Item Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
