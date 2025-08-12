@@ -3,22 +3,47 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="container text-center my-4 p-3 border border-secondary rounded" style=" background-color: #BEBEBE;">
+    <h1>Shop Items</h1>
+</div>
 
-<h1>Shop Items</h1>
+<form method="post" class="mb-3" asp-controller="Items" asp-action="Index" Class="row mb-2"> 
+    <div class="row g-2 align-item-start">
+        <div class="col-md-6">
+            <input type="text" class="form-control" maxlength="100" name="searchText" value="@ViewBag.searchText" placeholder="Search Item" />
+        </div>
 
-<form method="post" class="mb-3" asp-controller="Items" asp-action="Index" Class="mb-3"> 
-    <input type="text" class="form-control" maxlength="100" name="searchText" value="@ViewBag.searchText" placeholder="Search Item"/> 
-    <div style="padding-top:10px">
-        <button type="submit" class="btn btn-outline-primary me-2">Search</button>
-        <a type="reset" class="btn btn-outline-danger" asp-controller="Items" asp-action="Index">Rest</a>
+        <div class="col-3">
+            <select name="CategoryId" class="form-select" asp-items="@ViewBag.CategoryList">
+                <option value="">All Categories</option>
+            </select>
+        </div>
 
+        <div style="padding-top:10px">
+            <button type="submit" class="btn btn-outline-primary me-2">Search</button>
+            <a type="reset" class="btn btn-outline-danger" asp-controller="Items" asp-action="Index">Rest</a>
+
+        </div>
     </div>
 </form>
+
+@if (ViewBag.SearchText != null)
+{
+    <p>
+        Your search returned @Model.Count() matching item@(Model.Count() !=1?"s": "")
+    </p>
+}
+else
+{
+    <p>Showing @Model.Count() Items</p>
+}
+
 
 @if (Model == null || !Model.Any())
 {
     <p class="text-danger">No items found matching your search.</p>
 }
+
 
 
 <p>
