@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AOWebApp.Data;
 using AOWebApp.Models;
+using AOWebApp.ViewModel;
+
 
 namespace AOWebApp.Controllers
 {
@@ -20,7 +22,7 @@ namespace AOWebApp.Controllers
         }
 
         // GET: Items
-        public async Task<IActionResult> Index(string searchText, int? CategoryId)
+        public async Task<IActionResult> Index(ItemSearchViewModel viewModel)
         {
             #region CategoriesQuery
             var Categories = _context.ItemCategories
@@ -33,33 +35,47 @@ namespace AOWebApp.Controllers
                 })
                 .ToList();
 
-            ViewBag.CategoryList = new SelectList(Categories,
-                                    nameof(ItemCategory.CategoryId),
-                                    nameof(ItemCategory.CategoryName),
-                                    CategoryId);
+            //ViewBag.CategoryList = new SelectList(Categories,
+            //                        nameof(ItemCategory.CategoryId),
+            //                        nameof(ItemCategory.CategoryName),
+            //                        CategoryId);
+
+            viewModel.CategoryList = new SelectList(Categories,
+                        nameof(ItemCategory.CategoryId),
+                        nameof(ItemCategory.CategoryName));
             #endregion
 
             #region ItemQuery
-            ViewBag.SearchText = searchText; 
+            //ViewBag.SearchText = searchText;
             var amazonOrders2025Context = _context.Items
                 .Include(i => i.Category)
                 .OrderBy(i => i.ItemName)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchText))
+            if (!string.IsNullOrWhiteSpace(viewModel.SearchText))
             {
                 amazonOrders2025Context = amazonOrders2025Context
-                    .Where(i => i.ItemName.Contains(searchText));
+                    .Where(i => i.ItemName.Contains(viewModel.SearchText));
             }
 
-            if(CategoryId != null)
+            if (viewModel.CategoryId != null)
             {
                 amazonOrders2025Context = amazonOrders2025Context
-                    .Where(i => i.Category.ParentCategoryId == CategoryId);
+                    .Where(i => i.Category.ParentCategoryId == viewModel.CategoryId);
             }
+
+            viewModel.Items = await amazonOrders2025Context
+                .Select( i => new Item_ItemDetails
+                {
+                    TheItem = i, 
+                    ReviewCount = (i.Reviews != null ? i.Reviews.Count : 0),
+                    AverageRating = (i.Reviews != null && i.Reviews.Count() > 0 ? i.Reviews.Select(r => r.Rating).Average() : 0)
+                })
+                .ToListAsync();
 
             #endregion
-            return View(await amazonOrders2025Context.ToListAsync());
+            //return View(await amazonOrders2025Context.ToListAsync());
+            return View(viewModel);
         }
 
         // GET: Items/Details/5

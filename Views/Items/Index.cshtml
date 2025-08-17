@@ -1,4 +1,5 @@
-﻿@model IEnumerable<AOWebApp.Models.Item>
+﻿@model AOWebApp.ViewModel.ItemSearchViewModel
+
 
 @{
     ViewData["Title"] = "Index";
@@ -10,12 +11,12 @@
 <form method="post" class="mb-3" asp-controller="Items" asp-action="Index" Class="row mb-2"> 
     <div class="row g-2 align-item-start">
         <div class="col-md-6">
-            <input type="text" class="form-control" maxlength="100" name="searchText" value="@ViewBag.searchText" placeholder="Search Item" />
+            <input type="text" class="form-control" maxlength="100" asp-for="SearchText" placeholder="Search items" title="SearchText" />
         </div>
 
         <div class="col-3">
-            <select name="CategoryId" class="form-select" asp-items="@ViewBag.CategoryList">
-                <option value="">All Categories</option>
+            <select asp-for="CategoryId" class="form-control" asp-items="@Model.CategoryList">
+                <option value="">All categories</option>
             </select>
         </div>
 
@@ -27,19 +28,19 @@
     </div>
 </form>
 
-@if (ViewBag.SearchText != null)
+@if (Model.SearchText != null)
 {
     <p>
-        Your search returned @Model.Count() matching item@(Model.Count() !=1?"s": "")
+        Your search returned @Model.Items.Count() matching item@(@Model.Items.Count() != 1 ? "s" : "")
     </p>
 }
 else
 {
-    <p>Showing @Model.Count() Items</p>
+    <p>Showing @Model.Items.Count() Items</p>
 }
 
 
-@if (Model == null || !Model.Any())
+@if (Model == null || !Model.Items.Any())
 {
     <p class="text-danger">No items found matching your search.</p>
 }
@@ -50,7 +51,7 @@ else
     <a asp-action="Create">Create New</a>
 </p>
 <div class="row">
-    @foreach (var item in Model)
+    @foreach (var item in Model.Items)
     {
         <div class="col-md-4 col-sm-6 mb-4"> 
             <div class="card h-100">
@@ -59,6 +60,16 @@ else
                     <p class="m-1">Category: @item.Category.CategoryName</p>
                     <p class="card-text">Description: @item.ItemDescription</p>
                     <p>Cost:$@item.ItemCost</p>
+                    <p>
+                        Rating: @if(item.ReviewCount > 0)
+                        {
+                            <span>@item.AverageRating across @item.ReviewCount Reviews</span>
+                        }
+                        else
+                        {
+                            <span>This item has not been reviewed</span>
+                        
+                    </p>
                 </div>
                 <img src="@item.ItemImage" alt="@item.ItemName" style="height:200px; width:200px;">
                 <div style="padding:10px">
