@@ -1,5 +1,4 @@
-﻿@model AOWebApp.ViewModel.ItemSearchViewModel
-
+﻿@model AOWebApp.ViewModel.ItemSearchViewModel 
 
 @{
     ViewData["Title"] = "Index";
@@ -60,16 +59,7 @@ else
                     <p class="m-1">Category: @item.Category.CategoryName</p>
                     <p class="card-text">Description: @item.ItemDescription</p>
                     <p>Cost:$@item.ItemCost</p>
-                    <p>
-                        Rating: @if(item.ReviewCount > 0)
-                        {
-                            <span>@item.AverageRating across @item.ReviewCount Reviews</span>
-                        }
-                        else
-                        {
-                            <span>This item has not been reviewed</span>
-                        
-                    </p>
+
                 </div>
                 <img src="@item.ItemImage" alt="@item.ItemName" style="height:200px; width:200px;">
                 <div style="padding:10px">
