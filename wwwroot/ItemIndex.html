@@ -13,8 +13,23 @@
             Shop Items
         </h1>
 
-        <div class="row justify-content-between mt-2">
-            <div class="col-4 mb-2">
+        <div class="row mb-3">
+            <div class="col-3">
+                <input name="SearchText" class="form-control" placeholder="Item Search"/>
+            </div>
+            <div class="col-3">
+                <select name="CategoryId" class="form-control">
+                    <option>All Categories....</option>
+                </select>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-outline-primary">Search</button> 
+            </div>
+
+        </div>
+
+        <div class="row justify-content-start">
+            <!--<div class="col-4 mb-2">
                 <div class="card">
                 <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
@@ -23,15 +38,100 @@
                     <p class="card-text">Price</p>
                 </div>
                </div>
-            </div>
+            </div>-->
         </div>
+    </div>
+    <script>
+        runQuery();
+
+        var btn = document.querySelector(".row.mb-3 button.btn.btn-outline-primary")
+        btn.addEventListener("click", (e) => {
+            runQuery();
+        });
 
 
-        </div>
+        function runQuery() {
+            let text = document.querySelector('[name="SearchText"]').value;
+
+            fetch(`/api/ItemsWebAPI?SearchText=${text}`)
+                .then(response => response.json())
+                .then(data => buildItems(data))
+                .catch(error => console.error('unable to load', error));
+
+            fetch('/api/ParentCategoriesWebAPI')
+                .then((response) => response.json())
+                .then(data => {
+                    let select = document.querySelector('select[name="CategoryId"]');
+
+                    data.forEach(c => {
+                        let opt = document.createElement("option");
+                        opt.value = c.categoryId;
+                        opt.innerText = c.categoryName
+                        select.appendChild(opt);
+                    })
+                })
+        }
+
+        //fetch('/api/ItemsWebAPI')
+        //    .then((response) => response.json())
+        //    .then(data =>
+        //        buildItems(data))
+        //    .catch(error =>
+        //        console.error(error));
 
 
 
+        function buildItems(data) {
+            var row = document.querySelector(".row.justify-content-start");
+
+
+            let oldCols = row.querySelectorAll('div.col-4:not([hidden])');
+            oldCols.forEach(oc => {
+                row.removeChild(oc);
+            });
+
+            for (let i = 0; i < data.length; i++) {
+                let col = document.createElement('div');
+                col.classList.add('col-4', 'mb-2');
+
+                let card = document.createElement('div');
+                card.classList.add('card');
+                col.appendChild(card);
+
+                let cardB = document.createElement('div');
+                cardB.classList.add('card-body');
+                card.appendChild(cardB);
+
+                let title = document.createElement('h5');
+                title.innerText = data[i].itemName;
+                title.classList.add('card-title');
+                cardB.appendChild(title);
+
+                let cardT = document.createElement('p');
+                cardT.innerText = data[i].itemDescription;
+                cardT.classList.add('card-text');
+                cardB.appendChild(cardT);
+
+                let cardP = document.createElement('p');
+                cardP.innerText = data[i].itemCost;
+                cardP.classList.add('card-text');
+                cardB.appendChild(cardP);
+
+
+                let img = document.createElement('img');
+                img.setAttribute('src', data[i].itemImage);
+                img.setAttribute('alt', 'no image');
+                img.classList.add('card-img-top');
+                card.appendChild(img);
+
+                row.appendChild(col);
+            };
+
+        };
+
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
 </body>
 </html>
