@@ -2,7 +2,7 @@ import './App.css';
 import Card from './componets/Card'
 import CardV2 from './componets/CardV2'
 import CardV3 from './componets/CardV3'
-import CardList from './componets/CardList'
+import CardList from './componets/CardListSearch'
 
 
 function App() {

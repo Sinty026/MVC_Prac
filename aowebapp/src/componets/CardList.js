@@ -1,5 +1,6 @@
-﻿import Card from "./CardV3"
-import cardData from "../assets/itemData.json"
+﻿import React, { useState } from 'react'
+import Card from "./CardV3"
+//import cardData from "../assets/itemData.json"
 
 
 const CardList = ({ }) => {
@@ -13,7 +14,20 @@ const CardList = ({ }) => {
 
     //]
 
-    console.log("cardData: " + cardData);
+    const [cardData, setState] = useState([]);
+
+    React.useEffect(() => {
+
+        fetch("http://localhost:5042/api/ItemsWebAPI")
+            .then(response => response.json())
+            .then(data => setState(data))
+            .catch(err => {
+                console.log(err);
+            });
+
+
+    }, [])
+
 
     return (
         <div className="row">
