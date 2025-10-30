@@ -8,6 +8,7 @@ import Home from "./routes/Home"
 import Contact from "./routes/Contact"
 import CardList from './componets/CardListSearch'
 import CardDetail from "./componets/CardDetail"
+import Graph from './routes/Graph'
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -19,6 +20,7 @@ root.render(
                 <Route path="/" element={<Home />} />
                 <Route path="Home" element={<Home />} />
                 <Route path="Contact" element={<Contact />} />
+                <Route path="Graph" element={<Graph />} />
                 <Route path="Products" element={<CardList />} />
                 <Route path="" element={<Home />} />
                 <Route path="*" element={<Home />} />
